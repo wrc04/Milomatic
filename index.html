@@ -52,9 +52,14 @@
       .grid {
         display: grid;
         gap: 10px;
+        min-width: 0;
       }
       .grid-2 {
         grid-template-columns: 1fr;
+      }
+      .grid > *,
+      .grid-2 > * {
+        min-width: 0;
       }
       label {
         display: block;
@@ -155,6 +160,32 @@
       .hidden {
         display: none;
       }
+      .app-info {
+        margin-top: 6px;
+      }
+      .app-info summary {
+        color: var(--primary);
+        font-weight: 600;
+        cursor: pointer;
+        padding: 10px 4px;
+        list-style-position: inside;
+      }
+      .app-info summary .label-hide {
+        display: none;
+      }
+      .app-info[open] summary .label-show {
+        display: none;
+      }
+      .app-info[open] summary .label-hide {
+        display: inline;
+      }
+      .app-info-content {
+        padding-top: 2px;
+      }
+      input[type="date"] {
+        min-width: 0;
+        max-width: 100%;
+      }
       @media (min-width: 760px) {
         .grid-2 {
           grid-template-columns: 1fr 1fr;
@@ -169,17 +200,22 @@
     <main class="app">
       <section class="card">
         <h1>Milomatic Mileage Tracker</h1>
-        <p class="subtle">
-          Private local tracker for business driving. Data is stored locally in this browser/device only unless you export a backup.
-        </p>
-        <p class="subtle">
-          Units: <strong>kilometres (km)</strong>. Canadian spelling is used where relevant.
-        </p>
-        <p class="subtle">
-          <strong>Data safety warning:</strong> Your records are saved only in this device/browser storage. Data can be lost if Safari website data is cleared,
-          if this Home Screen web app is removed, if the app URL changes, or if you replace this phone. Export <strong>Backup JSON</strong> regularly.
-          Use <strong>CSV</strong> for spreadsheets/accountants; use <strong>JSON</strong> to restore app data in Milomatic.
-        </p>
+        <details class="app-info">
+          <summary><span class="label-show">Show app info</span><span class="label-hide">Hide app info</span></summary>
+          <div class="app-info-content">
+            <p class="subtle">
+              Private local tracker for business driving. Data is stored locally in this browser/device only unless you export a backup.
+            </p>
+            <p class="subtle">
+              Units: <strong>kilometres (km)</strong>. Canadian spelling is used where relevant.
+            </p>
+            <p class="subtle">
+              <strong>Data safety warning:</strong> Your records are saved only in this device/browser storage. Data can be lost if Safari website data is cleared,
+              if this Home Screen web app is removed, if the app URL changes, or if you replace this phone. Export <strong>Backup JSON</strong> regularly.
+              Use <strong>CSV</strong> for spreadsheets/accountants; use <strong>JSON</strong> to restore app data in Milomatic.
+            </p>
+          </div>
+        </details>
       </section>
 
       <section class="card">
@@ -213,6 +249,10 @@
               <label for="tripVehicle">Vehicle</label>
               <select id="tripVehicle" required></select>
             </div>
+          </div>
+
+          <div>
+            <button type="button" class="btn btn-success" id="useVehicleOdoBtn">Use Vehicle Odometer as Start</button>
           </div>
 
           <div class="grid grid-2">
@@ -261,7 +301,6 @@
           <div class="btn-row">
             <button type="submit" class="btn btn-primary" id="saveTripBtn">Save Trip</button>
             <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel Edit</button>
-            <button type="button" class="btn btn-success" id="useVehicleOdoBtn">Use Vehicle Odometer as Start</button>
           </div>
         </form>
       </section>
