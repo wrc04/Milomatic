@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1f2937" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>Milomatic - Mileage Tracker</title>
+    <link rel="manifest" href="manifest.json" />
+    <style>
+      :root {
+        --bg: #f6f7f9;
+        --card: #ffffff;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --line: #d1d5db;
+        --primary: #0b5ed7;
+        --danger: #b42318;
+        --success: #067647;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .app {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 12px;
+      }
+      h1,
+      h2 {
+        margin: 0 0 10px;
+        line-height: 1.2;
+      }
+      .subtle {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+      }
+      .grid {
+        display: grid;
+        gap: 10px;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      input,
+      select,
+      textarea,
+      button {
+        width: 100%;
+        font-size: 1rem;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        padding: 12px;
+      }
+      textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+      .btn-row {
+        display: grid;
+        gap: 8px;
+      }
+      .btn {
+        border: 0;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-danger {
+        background: var(--danger);
+        color: #fff;
+      }
+      .btn-secondary {
+        background: #e5e7eb;
+        color: #111827;
+      }
+      .btn-success {
+        background: var(--success);
+        color: #fff;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .row > * {
+        flex: 1;
+      }
+      .pill {
+        display: inline-block;
+        background: #eef2ff;
+        color: #1e3a8a;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 0.85rem;
+      }
+      .trip-item,
+      .vehicle-item {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 8px;
+        background: #fff;
+      }
+      .trip-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: baseline;
+      }
+      .meta {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .totals-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .total-box {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+      }
+      .k {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+      .empty {
+        color: var(--muted);
+        font-style: italic;
+      }
+      .hidden {
+        display: none;
+      }
+      @media (min-width: 760px) {
+        .grid-2 {
+          grid-template-columns: 1fr 1fr;
+        }
+        .btn-row {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="card">
+        <h1>Milomatic Mileage Tracker</h1>
+        <p class="subtle">
+          Private local tracker for business driving. Data is stored locally in this browser/device only unless you export a backup.
+        </p>
+        <p class="subtle">
+          Units: <strong>kilometres (km)</strong>. Canadian spelling is used where relevant.
+        </p>
+        <p class="subtle">
+          <strong>Data safety warning:</strong> Your records are saved only in this device/browser storage. Data can be lost if Safari website data is cleared,
+          if this Home Screen web app is removed, if the app URL changes, or if you replace this phone. Export <strong>Backup JSON</strong> regularly.
+          Use <strong>CSV</strong> for spreadsheets/accountants; use <strong>JSON</strong> to restore app data in Milomatic.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Vehicles</h2>
+        <div class="grid grid-2">
+          <div>
+            <label for="vehicleName">Vehicle name</label>
+            <input id="vehicleName" type="text" placeholder="Example: 2018 Ford F-150" />
+          </div>
+          <div>
+            <label for="vehicleOdometer">Current odometer (km)</label>
+            <input id="vehicleOdometer" type="number" min="0" step="0.1" placeholder="0" />
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px">
+          <button id="addVehicleBtn" class="btn btn-primary">Add Vehicle</button>
+        </div>
+        <div id="vehicleList" style="margin-top: 10px"></div>
+      </section>
+
+      <section class="card">
+        <h2 id="tripFormTitle">Add Trip</h2>
+        <form id="tripForm" class="grid">
+          <input type="hidden" id="tripId" />
+          <div class="grid grid-2">
+            <div>
+              <label for="tripDate">Date</label>
+              <input id="tripDate" type="date" required />
+            </div>
+            <div>
+              <label for="tripVehicle">Vehicle</label>
+              <select id="tripVehicle" required></select>
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div>
+              <label for="startOdometer">Start odometer (km)</label>
+              <input id="startOdometer" type="number" min="0" step="0.1" required />
+            </div>
+            <div>
+              <label for="endOdometer">End odometer (km)</label>
+              <input id="endOdometer" type="number" min="0" step="0.1" required />
+            </div>
+          </div>
+
+          <div>
+            <label for="distanceKm">Distance (km, calculated)</label>
+            <input id="distanceKm" type="number" readonly />
+          </div>
+
+          <div class="grid grid-2">
+            <div>
+              <label for="tripCategory">Category</label>
+              <select id="tripCategory" required></select>
+            </div>
+            <div>
+              <label for="businessPurpose">Business purpose</label>
+              <input id="businessPurpose" type="text" placeholder="Reason for this trip" required />
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div>
+              <label for="startLocation">Start location</label>
+              <input id="startLocation" type="text" placeholder="Example: Duncan, BC" required />
+            </div>
+            <div>
+              <label for="destination">Destination</label>
+              <input id="destination" type="text" placeholder="Example: Port Hardy, BC" required />
+            </div>
+          </div>
+
+          <div>
+            <label for="notes">Notes</label>
+            <textarea id="notes" placeholder="Any details you want to keep"></textarea>
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn btn-primary" id="saveTripBtn">Save Trip</button>
+            <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel Edit</button>
+            <button type="button" class="btn btn-success" id="useVehicleOdoBtn">Use Vehicle Odometer as Start</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Reports</h2>
+        <div class="totals-grid">
+          <div class="total-box">
+            <div class="subtle">Current month total</div>
+            <div id="monthTotal" class="k">0.0 km</div>
+          </div>
+          <div class="total-box">
+            <div class="subtle">Current year total</div>
+            <div id="yearTotal" class="k">0.0 km</div>
+          </div>
+        </div>
+        <h3>Totals by category</h3>
+        <div id="categoryTotals" class="subtle"></div>
+        <h3>Totals by vehicle</h3>
+        <div id="vehicleTotals" class="subtle"></div>
+      </section>
+
+      <section class="card">
+        <h2>Trips (newest first)</h2>
+        <div id="tripList"></div>
+      </section>
+
+      <section class="card">
+        <h2>Data & Export</h2>
+        <div class="btn-row">
+          <button id="exportCsvBtn" class="btn btn-primary">Export CSV</button>
+          <button id="exportJsonBtn" class="btn btn-secondary">Export Backup JSON</button>
+          <label class="btn btn-secondary" for="importJsonInput" style="display:flex;justify-content:center;align-items:center;">Import Backup JSON</label>
+        </div>
+        <input id="importJsonInput" type="file" accept="application/json" class="hidden" />
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
