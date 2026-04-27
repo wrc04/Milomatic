@@ -22,6 +22,11 @@
       * {
         box-sizing: border-box;
       }
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
       body {
         margin: 0;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -32,6 +37,8 @@
         max-width: 900px;
         margin: 0 auto;
         padding: 12px;
+        min-width: 0;
+        box-sizing: border-box;
       }
       h1,
       h2 {
@@ -50,11 +57,15 @@
         margin-bottom: 12px;
         min-width: 0;
         max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
       }
       .grid {
         display: grid;
         gap: 10px;
         min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
       }
       .grid-2 {
         grid-template-columns: 1fr;
@@ -186,11 +197,27 @@
       .app-info-content {
         padding-top: 2px;
       }
+      .date-input-wrap {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
       input[type="date"] {
         display: block;
         width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        inline-size: 100%;
+        box-sizing: border-box;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      input[type="date"]::-webkit-date-and-time-value {
         min-width: 0;
         max-width: 100%;
+        text-align: left;
       }
       @media (min-width: 760px) {
         .grid-2 {
@@ -249,7 +276,9 @@
           <div class="grid grid-2">
             <div>
               <label for="tripDate">Date</label>
-              <input id="tripDate" type="date" required />
+              <div class="date-input-wrap">
+                <input id="tripDate" type="date" required />
+              </div>
             </div>
             <div>
               <label for="tripVehicle">Vehicle</label>
