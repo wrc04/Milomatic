@@ -17,7 +17,7 @@ A private, offline-capable mileage tracker web app/PWA for business driving.
   - Supply Pickup
   - Showing
   - Tenant Visit
-  - Port Hardy Property Trip
+  - Property Trip
   - Administration
   - Other
 - Trip list with newest first
@@ -62,6 +62,9 @@ Any static host that serves files over HTTPS will work (for example Cloudflare P
 
 ## Data safety note
 All mileage data is stored locally in this browser/device only, unless you export and move backup files yourself.
+
+## Export file warning
+Do not commit exported CSV or JSON backup files to this repository. These may contain private mileage records. Keep exports in Files, iCloud Drive, email, or spreadsheets instead.
 
 ## Service worker cache versioning
 When you change app files (`index.html`, `app.js`, etc.), bump the cache name in `service-worker.js` (for example from `milomatic-cache-v1` to `milomatic-cache-v2`) so clients refresh to the new app shell.

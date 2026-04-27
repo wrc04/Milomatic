@@ -12,7 +12,7 @@
     "Supply Pickup",
     "Showing",
     "Tenant Visit",
-    "Port Hardy Property Trip",
+    "Property Trip",
     "Administration",
     "Other"
   ];
