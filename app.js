@@ -18,6 +18,7 @@
   ];
 
   const els = {
+    vehicleFields: document.getElementById("vehicleFields"),
     vehicleName: document.getElementById("vehicleName"),
     vehicleOdometer: document.getElementById("vehicleOdometer"),
     addVehicleBtn: document.getElementById("addVehicleBtn"),
@@ -35,6 +36,7 @@
     businessPurpose: document.getElementById("businessPurpose"),
     startLocation: document.getElementById("startLocation"),
     destination: document.getElementById("destination"),
+    recentLocations: document.getElementById("recentLocations"),
     notes: document.getElementById("notes"),
     saveTripBtn: document.getElementById("saveTripBtn"),
     cancelEditBtn: document.getElementById("cancelEditBtn"),
@@ -53,21 +55,23 @@
   };
 
   const state = loadState();
+  let vehicleFieldsVisible = false;
 
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) {
-        return { vehicles: [], trips: [], categories: [...DEFAULT_CATEGORIES] };
+        return { vehicles: [], trips: [], categories: [...DEFAULT_CATEGORIES], recentLocations: [] };
       }
       const parsed = JSON.parse(raw);
       return {
         vehicles: Array.isArray(parsed.vehicles) ? parsed.vehicles : [],
         trips: Array.isArray(parsed.trips) ? parsed.trips : [],
-        categories: Array.isArray(parsed.categories) && parsed.categories.length ? parsed.categories : [...DEFAULT_CATEGORIES]
+        categories: Array.isArray(parsed.categories) && parsed.categories.length ? parsed.categories : [...DEFAULT_CATEGORIES],
+        recentLocations: Array.isArray(parsed.recentLocations) ? parsed.recentLocations : []
       };
     } catch {
-      return { vehicles: [], trips: [], categories: [...DEFAULT_CATEGORIES] };
+      return { vehicles: [], trips: [], categories: [...DEFAULT_CATEGORIES], recentLocations: [] };
     }
   }
 
@@ -163,7 +167,18 @@
     calculateDistance();
   }
 
+  function setVehicleFieldsVisibility(isVisible) {
+    vehicleFieldsVisible = isVisible;
+    els.vehicleFields.classList.toggle("hidden", !isVisible);
+  }
+
   function addVehicle() {
+    if (!vehicleFieldsVisible) {
+      setVehicleFieldsVisibility(true);
+      els.vehicleName.focus();
+      return;
+    }
+
     const name = els.vehicleName.value.trim();
     const odometer = Number(els.vehicleOdometer.value);
     if (!name) return alert("Please enter a vehicle name.");
@@ -172,7 +187,23 @@
     saveState();
     els.vehicleName.value = "";
     els.vehicleOdometer.value = "";
+    setVehicleFieldsVisibility(false);
     renderAll();
+  }
+
+  function rememberLocation(value) {
+    const cleaned = value.trim();
+    if (!cleaned) return;
+    const index = state.recentLocations.findIndex((item) => item.toLowerCase() === cleaned.toLowerCase());
+    if (index >= 0) state.recentLocations.splice(index, 1);
+    state.recentLocations.unshift(cleaned);
+    if (state.recentLocations.length > 20) state.recentLocations.length = 20;
+  }
+
+  function renderRecentLocations() {
+    els.recentLocations.innerHTML = state.recentLocations
+      .map((location) => `<option value="${escapeHtml(location)}"></option>`)
+      .join("");
   }
 
   function saveTrip(evt) {
@@ -219,6 +250,9 @@
     } else {
       state.trips.push(trip);
     }
+
+    rememberLocation(startLocation);
+    rememberLocation(destination);
 
     const vehicle = getVehicle(trip.vehicleId);
     if (vehicle && trip.endOdometer > vehicle.currentOdometer) {
@@ -426,6 +460,7 @@
         state.vehicles = imported.vehicles;
         state.trips = imported.trips;
         state.categories = Array.isArray(imported.categories) && imported.categories.length ? imported.categories : [...DEFAULT_CATEGORIES];
+        state.recentLocations = Array.isArray(imported.recentLocations) ? imported.recentLocations : [];
         saveState();
         resetTripForm();
         renderAll();
@@ -497,6 +532,7 @@
   function renderAll() {
     renderVehicleSelect();
     renderCategorySelect();
+    renderRecentLocations();
     renderVehicles();
     renderTrips();
     renderReports();
@@ -511,6 +547,7 @@
   }
 
   function init() {
+    setVehicleFieldsVisibility(false);
     bindEvents();
     renderAll();
     resetTripForm();
