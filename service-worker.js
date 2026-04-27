@@ -1,4 +1,4 @@
-const CACHE_NAME = "milomatic-cache-v2";
+const CACHE_NAME = "milomatic-cache-v3";
 const APP_SHELL = ["./", "./index.html", "./app.js", "./manifest.json", "./service-worker.js"];
 
 self.addEventListener("install", (event) => {
