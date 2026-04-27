@@ -48,6 +48,8 @@
         border-radius: 12px;
         padding: 12px;
         margin-bottom: 12px;
+        min-width: 0;
+        max-width: 100%;
       }
       .grid {
         display: grid;
@@ -71,6 +73,8 @@
       textarea,
       button {
         width: 100%;
+        min-width: 0;
+        max-width: 100%;
         font-size: 1rem;
         border-radius: 10px;
         border: 1px solid var(--line);
@@ -183,6 +187,8 @@
         padding-top: 2px;
       }
       input[type="date"] {
+        display: block;
+        width: 100%;
         min-width: 0;
         max-width: 100%;
       }
