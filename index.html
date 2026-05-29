@@ -8,6 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>Milomatic - Mileage Tracker</title>
     <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
     <style>
       :root {
         --bg: #0c111b;
@@ -393,14 +395,32 @@
         <h2>Reports</h2>
         <div class="totals-grid">
           <div class="total-box">
-            <div class="subtle">Current month total</div>
+            <div class="subtle">This month</div>
             <div id="monthTotal" class="k">0.0 km</div>
           </div>
           <div class="total-box">
-            <div class="subtle">Current year total</div>
+            <div class="subtle">This year</div>
             <div id="yearTotal" class="k">0.0 km</div>
           </div>
         </div>
+
+        <h3>Filtered totals</h3>
+        <div class="grid grid-2">
+          <div>
+            <label for="reportYear">Year</label>
+            <select id="reportYear"></select>
+          </div>
+          <div>
+            <label for="reportMonth">Month</label>
+            <select id="reportMonth"></select>
+          </div>
+        </div>
+        <div class="total-box" style="margin-top: 10px">
+          <div class="subtle" id="reportPeriodLabel">Selected period total</div>
+          <div id="reportPeriodTotal" class="k">0.0 km</div>
+        </div>
+        <p class="subtle" style="margin-top: 8px">Category and vehicle totals below reflect the selected year and month.</p>
+
         <h3>Totals by category</h3>
         <div id="categoryTotals" class="subtle"></div>
         <h3>Totals by vehicle</h3>

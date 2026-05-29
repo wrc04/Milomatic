@@ -1,3 +1,6 @@
 .DS_Store
 milomatic-trips-*.csv
 milomatic-backup-*.json
+
+# Claude Code local tooling (preview server config, etc.)
+.claude/

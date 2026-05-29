@@ -1,5 +1,15 @@
-const CACHE_NAME = "milomatic-cache-v4";
-const APP_SHELL = ["./", "./index.html", "./app.js", "./manifest.json", "./service-worker.js"];
+const CACHE_NAME = "milomatic-cache-v5";
+const APP_SHELL = [
+  "./",
+  "./index.html",
+  "./app.js",
+  "./manifest.json",
+  "./service-worker.js",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/icon-maskable-512.png",
+  "./icons/apple-touch-icon.png"
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
